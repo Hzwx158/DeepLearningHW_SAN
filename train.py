@@ -4,15 +4,22 @@ import argparse
 import random
 import torch
 import numpy as np
+
+#这个库是写日志的
 from tensorboardX import SummaryWriter
 
+#都是文件夹里的库
 from utils import load_config, save_checkpoint, load_checkpoint
 from dataset import get_dataset
 from models.Backbone import Backbone
 from training import train, eval
 
+#config.yaml的路径
+config_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\config.yaml"
+
+#设置parser和args
 parser = argparse.ArgumentParser(description='HYB Tree')
-parser.add_argument('--config', default='config.yaml', type=str, help='path to config file')
+parser.add_argument('--config', default=config_path, type=str, help='path to config file')
 parser.add_argument('--check', action='store_true', help='only for code check')
 args = parser.parse_args()
 
