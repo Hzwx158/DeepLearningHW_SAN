@@ -10,26 +10,23 @@ import pickle as pkl
     请特别注意不要把目录写错(通过assert进行了检查)
 '''
 
-
+mode = 'test'
 #image_path = '/Users/tal/Documents/Tal/myWork/公式识别/code/WAP/data/off_image_train'
-#image_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\dataset-from-wan\off_image_train\off_image_train"
-#image_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\data\a_matched_test_set\14_test_images\14_test_images"
-#image_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\data\HME100K\HME100K\train\train_images"
-image_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\data\HME100K\HME100K\test\test_images"
+image_path = (
+    "E:\\pythonwork\\deep_learning\\big_homework\\SAN-main\\dataset-from-wan\\off_image_%s\\off_image_%s"
+)%(mode, mode)
 
-#image_out = './train_image.pkl'
-image_out = './test_image.pkl'
+image_out = './%s_image.pkl'%mode
 
 #label_path = 'train_hyb'
-#label_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\data\HME100K\HME100K\train"
-label_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\data\HME100K\HME100K\test"
-#label_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\data\a_matched_test_set"
+label_path = (
+    "E:\\pythonwork\\deep_learning\\big_homework\\SAN-main\\dataset-from-wan\\%s_hyb"
+)%mode
 
-#label_out = './train_label.pkl'
-label_out = './test_label.pkl'
+label_out = './%s_label.pkl'%mode
 
 
-subfix = 'jpg'
+subfix = 'bmp'
 images = glob.glob(os.path.join(image_path, f'*.{subfix}'))
 image_dict = {}
 assert len(images)!=0, "empty images"
@@ -37,19 +34,20 @@ for item in tqdm(images):
 
     img = cv2.imread(item)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    #image_dict[os.path.basename(item).replace(f'_0.{subfix}','')] = img
-    image_dict[os.path.basename(item).replace(f'.{subfix}','')] = img
+    image_dict[os.path.basename(item).replace(f'_0.{subfix}','')] = img
+    # image_dict[os.path.basename(item).replace(f'.{subfix}','')] = img
 
 with open(image_out,'wb') as f:
     pkl.dump(image_dict, f)
 
 labels = glob.glob(os.path.join(label_path, '*.txt'))
 assert len(labels)!=0, "empty labels!"
+assert len(labels)==len(images), 'number of labels is not equal to number of images'
 label_dict = {}
 
-#测试集中含有中文顿号，需要用utf-8， 否则会报错
+# 原来的gen_pkl不适合我们找的数据集
 for item in tqdm(labels):
-    with open(item, 'r', encoding='utf-8') as f:
+    with open(item, 'r') as f:
         lines = f.readlines()
     label_dict[os.path.basename(item).replace('.txt','')] = lines
 
