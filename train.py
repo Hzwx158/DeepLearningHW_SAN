@@ -15,7 +15,7 @@ from models.Backbone import Backbone
 from training import train, eval
 
 #config.yaml的路径
-config_path = r"E:\pythonwork\deep_learning\big_homework\SAN-main\config.yaml"
+config_path = "./config.yaml"
 
 #设置parser和args
 parser = argparse.ArgumentParser(description='HYB Tree')
@@ -36,6 +36,7 @@ np.random.seed(params['seed'])
 torch.manual_seed(params['seed'])
 torch.cuda.manual_seed(params['seed'])
 
+#device = torch.device('cpu')#TODO:CUDA内存爆了 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 params['device'] = device
 
@@ -65,7 +66,11 @@ if params['finetune']:
 if not args.check:
     if not os.path.exists(os.path.join(params['checkpoint_dir'], model.name)):
         os.makedirs(os.path.join(params['checkpoint_dir'], model.name), exist_ok=True)
-    os.system(f'cp {args.config} {os.path.join(params["checkpoint_dir"], model.name, model.name)}.yaml')
+    #os.system(f'cp {args.config} {os.path.join(params["checkpoint_dir"], model.name, model.name)}.yaml')
+    print(args.config[2:])
+    print(os.path.join(params["checkpoint_dir"], model.name, model.name))
+    #os.system(f'xcopy {args.config[2:]} {os.path.join(params["checkpoint_dir"], model.name, model.name)}.yaml /f /y')
+    os.system(f'copy {args.config[2:]} {os.path.join(params["checkpoint_dir"], model.name, model.name)}.yaml /a')
 
 
 min_score = 0
