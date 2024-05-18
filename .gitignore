@@ -3,3 +3,7 @@
 
 14_test_images.tar
 best.pth
+/data
+*.pyc
+/checkpoints
+/logs
